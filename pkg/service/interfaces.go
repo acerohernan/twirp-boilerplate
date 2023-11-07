@@ -3,9 +3,9 @@ package service
 import (
 	"context"
 
-	"github.com/acerohernan/twirp-boilerplate/pkg/auth"
+	"github.com/acerohernan/twirp-boilerplate/core"
 )
 
 type Storage interface {
-	StoreSession(ctx context.Context, session *auth.Session) error
+	StoreSession(ctx context.Context, session *core.Session) error
 }

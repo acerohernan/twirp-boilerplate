@@ -12,10 +12,11 @@ import (
 
 // Injectors from wire.go:
 
-func InitializeServer() *Server {
+func InitializeServer() (*Server, error) {
 	storage := createSessionStorage()
-	server := NewServer(storage)
-	return server
+	authService := service.NewAuthService(storage)
+	server := NewServer(authService)
+	return server, nil
 }
 
 // wire.go:

@@ -8,12 +8,13 @@ import (
 	"github.com/google/wire"
 )
 
-func InitializeServer() *Server {
+func InitializeServer() (*Server, error) {
 	wire.Build(
 		createSessionStorage,
+		service.NewAuthService,
 		NewServer,
 	)
-	return &Server{}
+	return &Server{}, nil
 }
 
 func createSessionStorage() service.Storage {
