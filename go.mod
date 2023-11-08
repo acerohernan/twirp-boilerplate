@@ -11,9 +11,12 @@ require (
 require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/urfave/negroni v1.0.0 // indirect
+	go.uber.org/multierr v1.10.0 // indirect
+	go.uber.org/zap v1.26.0 // indirect
 )
 
 require (
+	github.com/joho/godotenv v1.5.1
 	github.com/lithammer/shortuuid/v4 v4.0.0
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rs/cors v1.10.1

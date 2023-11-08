@@ -3,18 +3,22 @@ package server
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net"
 	"net/http"
 	"sync/atomic"
 	"time"
 
 	"github.com/acerohernan/twirp-boilerplate/core/twirp"
+	"github.com/acerohernan/twirp-boilerplate/pkg/config"
+	"github.com/acerohernan/twirp-boilerplate/pkg/config/logger"
 	"github.com/acerohernan/twirp-boilerplate/pkg/service"
 	"github.com/rs/cors"
 	"github.com/urfave/negroni/v3"
 )
 
 type Server struct {
+	conf        *config.Config
 	authService *service.AuthService
 	httpServer  *http.Server
 	running     atomic.Bool
@@ -22,9 +26,12 @@ type Server struct {
 	closedChan  chan struct{}
 }
 
-func NewServer(authService *service.AuthService) *Server {
+func NewServer(conf *config.Config, authService *service.AuthService) *Server {
 	server := &Server{
+		conf:        conf,
 		authService: authService,
+		doneChan:    make(chan struct{}),
+		closedChan:  make(chan struct{}),
 	}
 
 	authServer := twirp.NewAuthServiceServer(authService)
@@ -66,11 +73,13 @@ func NewServer(authService *service.AuthService) *Server {
 }
 
 func (s *Server) Start() error {
+	logger.Infow("starting server...")
+
 	if s.running.Load() {
 		return errors.New("already running")
 	}
 
-	listener, err := net.Listen("tcp", ":3001")
+	listener, err := net.Listen("tcp", fmt.Sprint(":", s.conf.Port))
 
 	if err != nil {
 		return err
@@ -80,14 +89,10 @@ func (s *Server) Start() error {
 
 	s.running.Store(true)
 
+	logger.Infow("server started successfully")
+
 	<-s.doneChan
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
-	defer cancel()
-
-	_ = s.httpServer.Shutdown(ctx)
-
-	close(s.closedChan)
 	return nil
 }
 
@@ -96,8 +101,10 @@ func (s *Server) Stop(force bool) {
 		return
 	}
 
-	close(s.doneChan)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
 
-	// wait for fully closed
-	<-s.closedChan
+	_ = s.httpServer.Shutdown(ctx)
+
+	close(s.doneChan)
 }

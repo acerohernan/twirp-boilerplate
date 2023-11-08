@@ -7,15 +7,16 @@
 package server
 
 import (
+	"github.com/acerohernan/twirp-boilerplate/pkg/config"
 	"github.com/acerohernan/twirp-boilerplate/pkg/service"
 )
 
 // Injectors from wire.go:
 
-func InitializeServer() (*Server, error) {
+func InitializeServer(conf *config.Config) (*Server, error) {
 	storage := createSessionStorage()
 	authService := service.NewAuthService(storage)
-	server := NewServer(authService)
+	server := NewServer(conf, authService)
 	return server, nil
 }
 

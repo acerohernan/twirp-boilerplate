@@ -1,12 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/acerohernan/twirp-boilerplate/pkg/config"
+	"github.com/acerohernan/twirp-boilerplate/pkg/config/logger"
 	"github.com/acerohernan/twirp-boilerplate/pkg/server"
 )
 
@@ -19,7 +20,15 @@ func main() {
 }
 
 func runServer() error {
-	server, err := server.InitializeServer()
+	conf := config.NewConfig()
+
+	err := logger.InitLogger(conf.Logger)
+
+	if err != nil {
+		return err
+	}
+
+	server, err := server.InitializeServer(conf)
 
 	if err != nil {
 		return err
@@ -30,7 +39,7 @@ func runServer() error {
 
 	go func() {
 		sig := <-sigChan
-		fmt.Printf("exist requested, shutting down. signal: %v", sig)
+		logger.Infow("exist requested, shutting down...", "signal", sig)
 		server.Stop(false)
 	}()
 
