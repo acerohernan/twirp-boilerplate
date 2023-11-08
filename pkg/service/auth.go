@@ -42,3 +42,15 @@ func (s *AuthService) CreateSession(ctx context.Context, req *twirp.CreateSessio
 		Session: sess,
 	}, nil
 }
+
+func (s *AuthService) ListSessions(ctx context.Context, req *twirp.ListSessionsRequest) (*twirp.ListSessionsResponse, error) {
+	sess, err := s.storage.ListSessions(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &twirp.ListSessionsResponse{
+		Sessions: sess,
+	}, nil
+}

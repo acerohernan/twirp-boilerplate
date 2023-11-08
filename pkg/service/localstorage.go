@@ -9,7 +9,7 @@ import (
 
 type LocalStorage struct {
 	sessions map[string]*core.Session
-	mu       sync.Mutex
+	mu       sync.RWMutex
 }
 
 func NewLocalStorage() *LocalStorage {
@@ -25,4 +25,17 @@ func (s *LocalStorage) StoreSession(_ context.Context, session *core.Session) er
 	s.sessions[session.Id] = session
 
 	return nil
+}
+
+func (s *LocalStorage) ListSessions(ctx context.Context) ([]*core.Session, error) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	sessions := make([]*core.Session, 0)
+
+	for _, s := range s.sessions {
+		sessions = append(sessions, s)
+	}
+
+	return sessions, nil
 }

@@ -10,6 +10,19 @@ import (
 )
 
 type FakeStorage struct {
+	ListSessionsStub        func(context.Context) ([]*core.Session, error)
+	listSessionsMutex       sync.RWMutex
+	listSessionsArgsForCall []struct {
+		arg1 context.Context
+	}
+	listSessionsReturns struct {
+		result1 []*core.Session
+		result2 error
+	}
+	listSessionsReturnsOnCall map[int]struct {
+		result1 []*core.Session
+		result2 error
+	}
 	StoreSessionStub        func(context.Context, *core.Session) error
 	storeSessionMutex       sync.RWMutex
 	storeSessionArgsForCall []struct {
@@ -24,6 +37,70 @@ type FakeStorage struct {
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
+}
+
+func (fake *FakeStorage) ListSessions(arg1 context.Context) ([]*core.Session, error) {
+	fake.listSessionsMutex.Lock()
+	ret, specificReturn := fake.listSessionsReturnsOnCall[len(fake.listSessionsArgsForCall)]
+	fake.listSessionsArgsForCall = append(fake.listSessionsArgsForCall, struct {
+		arg1 context.Context
+	}{arg1})
+	stub := fake.ListSessionsStub
+	fakeReturns := fake.listSessionsReturns
+	fake.recordInvocation("ListSessions", []interface{}{arg1})
+	fake.listSessionsMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeStorage) ListSessionsCallCount() int {
+	fake.listSessionsMutex.RLock()
+	defer fake.listSessionsMutex.RUnlock()
+	return len(fake.listSessionsArgsForCall)
+}
+
+func (fake *FakeStorage) ListSessionsCalls(stub func(context.Context) ([]*core.Session, error)) {
+	fake.listSessionsMutex.Lock()
+	defer fake.listSessionsMutex.Unlock()
+	fake.ListSessionsStub = stub
+}
+
+func (fake *FakeStorage) ListSessionsArgsForCall(i int) context.Context {
+	fake.listSessionsMutex.RLock()
+	defer fake.listSessionsMutex.RUnlock()
+	argsForCall := fake.listSessionsArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeStorage) ListSessionsReturns(result1 []*core.Session, result2 error) {
+	fake.listSessionsMutex.Lock()
+	defer fake.listSessionsMutex.Unlock()
+	fake.ListSessionsStub = nil
+	fake.listSessionsReturns = struct {
+		result1 []*core.Session
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeStorage) ListSessionsReturnsOnCall(i int, result1 []*core.Session, result2 error) {
+	fake.listSessionsMutex.Lock()
+	defer fake.listSessionsMutex.Unlock()
+	fake.ListSessionsStub = nil
+	if fake.listSessionsReturnsOnCall == nil {
+		fake.listSessionsReturnsOnCall = make(map[int]struct {
+			result1 []*core.Session
+			result2 error
+		})
+	}
+	fake.listSessionsReturnsOnCall[i] = struct {
+		result1 []*core.Session
+		result2 error
+	}{result1, result2}
 }
 
 func (fake *FakeStorage) StoreSession(arg1 context.Context, arg2 *core.Session) error {
@@ -91,6 +168,8 @@ func (fake *FakeStorage) StoreSessionReturnsOnCall(i int, result1 error) {
 func (fake *FakeStorage) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
+	fake.listSessionsMutex.RLock()
+	defer fake.listSessionsMutex.RUnlock()
 	fake.storeSessionMutex.RLock()
 	defer fake.storeSessionMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}
