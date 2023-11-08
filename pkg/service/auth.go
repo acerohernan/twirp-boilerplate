@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"net/mail"
 
 	"github.com/acerohernan/twirp-boilerplate/core"
 	"github.com/acerohernan/twirp-boilerplate/core/twirp"
@@ -19,6 +20,14 @@ func NewAuthService(storage Storage) *AuthService {
 }
 
 func (s *AuthService) CreateSession(ctx context.Context, req *twirp.CreateSessionRequest) (*twirp.CreateSessionResponse, error) {
+	if req.Email == "" {
+		return nil, ErrBadRequest
+	}
+
+	if _, err := mail.ParseAddress(req.Email); err != nil {
+		return nil, ErrBadRequest
+	}
+
 	sess := &core.Session{
 		Id: utils.NewGuid(utils.SessionPrefix),
 	}

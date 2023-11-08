@@ -84,6 +84,16 @@ func Proto() error {
 	return nil
 }
 
+func Generate() error {
+	cmd := exec.Command("go", "generate", "./...")
+	connectStd(cmd)
+	if err := cmd.Run(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func connectStd(cmd *exec.Cmd) {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
