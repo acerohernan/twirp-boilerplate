@@ -6,5 +6,5 @@
 - [x] Dependency Injection
 - [x] Mock interfaces generation
 - [x] Unit Testing
-- [ ] Versioning
+- [x] Versioning
 - [ ] API load test
