@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package twirp;
+package twirp.v2;
 
 option go_package = "github.com/acerohernan/twirp-boilerplate/twirp";
 
@@ -16,11 +16,11 @@ message CreateSessionRequest {
 }
 
 message CreateSessionResponse {
-    core.Session session = 1;
+    rpc.Session session = 1;
 }
 
 message ListSessionsRequest {}
 
 message ListSessionsResponse {
-    repeated core.Session sessions = 1;
+    repeated rpc.Session sessions = 1;
 }

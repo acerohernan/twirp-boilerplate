@@ -9,32 +9,38 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/acerohernan/twirp-boilerplate/core/twirp"
 	"github.com/acerohernan/twirp-boilerplate/pkg/config"
 	"github.com/acerohernan/twirp-boilerplate/pkg/config/logger"
-	"github.com/acerohernan/twirp-boilerplate/pkg/service"
+	servicev1 "github.com/acerohernan/twirp-boilerplate/pkg/service/v1"
+	servicev2 "github.com/acerohernan/twirp-boilerplate/pkg/service/v2"
+	twirpv1 "github.com/acerohernan/twirp-boilerplate/rpc/twirp/v1"
+	twirpv2 "github.com/acerohernan/twirp-boilerplate/rpc/twirp/v2"
 	"github.com/rs/cors"
 	"github.com/urfave/negroni/v3"
 )
 
 type Server struct {
-	conf        *config.Config
-	authService *service.AuthService
-	httpServer  *http.Server
-	running     atomic.Bool
-	doneChan    chan struct{}
-	closedChan  chan struct{}
+	conf          *config.Config
+	authServiceV1 *servicev1.AuthService
+	authServiceV2 *servicev2.AuthService
+	httpServer    *http.Server
+	running       atomic.Bool
+	doneChan      chan struct{}
+	closedChan    chan struct{}
 }
 
-func NewServer(conf *config.Config, authService *service.AuthService) *Server {
+func NewServer(conf *config.Config, authServiceV1 *servicev1.AuthService,
+	authServiceV2 *servicev2.AuthService) *Server {
 	server := &Server{
-		conf:        conf,
-		authService: authService,
-		doneChan:    make(chan struct{}),
-		closedChan:  make(chan struct{}),
+		conf:          conf,
+		authServiceV1: authServiceV1,
+		authServiceV2: authServiceV2,
+		doneChan:      make(chan struct{}),
+		closedChan:    make(chan struct{}),
 	}
 
-	authServer := twirp.NewAuthServiceServer(authService)
+	authServerV1 := twirpv1.NewAuthServiceServer(authServiceV1)
+	authServerV2 := twirpv2.NewAuthServiceServer(authServiceV2)
 
 	middleares := []negroni.Handler{
 		// always first
@@ -54,7 +60,8 @@ func NewServer(conf *config.Config, authService *service.AuthService) *Server {
 	// setup router
 	mux := http.NewServeMux()
 
-	mux.Handle(authServer.PathPrefix(), authServer)
+	mux.Handle(authServerV1.PathPrefix(), authServerV1)
+	mux.Handle(authServerV2.PathPrefix(), authServerV2)
 
 	// setup middlewares
 	n := negroni.New()

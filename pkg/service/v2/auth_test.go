@@ -1,12 +1,12 @@
-package service_test
+package servicev2_test
 
 import (
 	"context"
 	"testing"
 
-	"github.com/acerohernan/twirp-boilerplate/core/twirp"
-	"github.com/acerohernan/twirp-boilerplate/pkg/service"
 	"github.com/acerohernan/twirp-boilerplate/pkg/service/servicefakes"
+	servicev2 "github.com/acerohernan/twirp-boilerplate/pkg/service/v2"
+	"github.com/acerohernan/twirp-boilerplate/rpc/twirp/v2"
 	"github.com/stretchr/testify/require"
 )
 
@@ -25,7 +25,7 @@ func TestCreateSession(t *testing.T) {
 
 func newTestAuthService() *TestAuthService {
 	storage := &servicefakes.FakeStorage{}
-	svc := service.NewAuthService(storage)
+	svc := servicev2.NewAuthService(storage)
 	return &TestAuthService{
 		AuthService: *svc,
 		storage:     storage,
@@ -34,6 +34,6 @@ func newTestAuthService() *TestAuthService {
 }
 
 type TestAuthService struct {
-	service.AuthService
+	servicev2.AuthService
 	storage *servicefakes.FakeStorage
 }

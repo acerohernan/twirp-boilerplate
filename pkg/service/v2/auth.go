@@ -1,19 +1,20 @@
-package service
+package servicev2
 
 import (
 	"context"
 	"net/mail"
 
-	"github.com/acerohernan/twirp-boilerplate/core"
-	"github.com/acerohernan/twirp-boilerplate/core/twirp"
+	"github.com/acerohernan/twirp-boilerplate/pkg/service"
 	"github.com/acerohernan/twirp-boilerplate/pkg/utils"
+	"github.com/acerohernan/twirp-boilerplate/rpc"
+	"github.com/acerohernan/twirp-boilerplate/rpc/twirp/v2"
 )
 
 type AuthService struct {
-	storage Storage
+	storage service.Storage
 }
 
-func NewAuthService(storage Storage) *AuthService {
+func NewAuthService(storage service.Storage) *AuthService {
 	return &AuthService{
 		storage: storage,
 	}
@@ -21,14 +22,14 @@ func NewAuthService(storage Storage) *AuthService {
 
 func (s *AuthService) CreateSession(ctx context.Context, req *twirp.CreateSessionRequest) (*twirp.CreateSessionResponse, error) {
 	if req.Email == "" {
-		return nil, ErrBadRequest
+		return nil, service.ErrBadRequest
 	}
 
 	if _, err := mail.ParseAddress(req.Email); err != nil {
-		return nil, ErrBadRequest
+		return nil, service.ErrBadRequest
 	}
 
-	sess := &core.Session{
+	sess := &rpc.Session{
 		Id: utils.NewGuid(utils.SessionPrefix),
 	}
 

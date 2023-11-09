@@ -9,14 +9,17 @@ package server
 import (
 	"github.com/acerohernan/twirp-boilerplate/pkg/config"
 	"github.com/acerohernan/twirp-boilerplate/pkg/service"
+	"github.com/acerohernan/twirp-boilerplate/pkg/service/v1"
+	"github.com/acerohernan/twirp-boilerplate/pkg/service/v2"
 )
 
 // Injectors from wire.go:
 
 func InitializeServer(conf *config.Config) (*Server, error) {
 	storage := createSessionStorage()
-	authService := service.NewAuthService(storage)
-	server := NewServer(conf, authService)
+	authService := servicev1.NewAuthService(storage)
+	servicev2AuthService := servicev2.NewAuthService(storage)
+	server := NewServer(conf, authService, servicev2AuthService)
 	return server, nil
 }
 

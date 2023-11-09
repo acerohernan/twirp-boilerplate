@@ -35,13 +35,16 @@ func Wire() error {
 
 func Proto() error {
 	twirpProtoFiles := []string{
-		"twirp/auth.proto",
+		"twirp/v1/greet.proto",
+		"twirp/v1/auth.proto",
+		"twirp/v2/greet.proto",
+		"twirp/v2/auth.proto",
 	}
 	grpcProtoFiles := []string{
 		"models.proto",
 	}
 
-	target := "core"
+	target := "rpc"
 
 	if err := os.MkdirAll(target, 0755); err != nil {
 		return err
@@ -56,7 +59,7 @@ func Proto() error {
 		"--twirp_opt=paths=source_relative",
 		"--plugin=go=" + "protoc-gen-go",
 		"--plugin=twirp=" + "protoc-gen-twirp",
-		"-I=./proto",
+		"-I=./rpc",
 	}, twirpProtoFiles...)
 	cmd := exec.Command("protoc", args...)
 	connectStd(cmd)
@@ -73,7 +76,7 @@ func Proto() error {
 		"--go-grpc_opt=paths=source_relative",
 		"--plugin=go=" + "protoc-gen-go",
 		"--plugin=go-grpc=" + "protoc-gen-go-grpc",
-		"-I=./proto",
+		"-I=./rpc",
 	}, grpcProtoFiles...)
 	cmd = exec.Command("protoc", args...)
 	connectStd(cmd)

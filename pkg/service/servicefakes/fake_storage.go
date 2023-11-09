@@ -5,29 +5,29 @@ import (
 	"context"
 	"sync"
 
-	"github.com/acerohernan/twirp-boilerplate/core"
 	"github.com/acerohernan/twirp-boilerplate/pkg/service"
+	"github.com/acerohernan/twirp-boilerplate/rpc"
 )
 
 type FakeStorage struct {
-	ListSessionsStub        func(context.Context) ([]*core.Session, error)
+	ListSessionsStub        func(context.Context) ([]*rpc.Session, error)
 	listSessionsMutex       sync.RWMutex
 	listSessionsArgsForCall []struct {
 		arg1 context.Context
 	}
 	listSessionsReturns struct {
-		result1 []*core.Session
+		result1 []*rpc.Session
 		result2 error
 	}
 	listSessionsReturnsOnCall map[int]struct {
-		result1 []*core.Session
+		result1 []*rpc.Session
 		result2 error
 	}
-	StoreSessionStub        func(context.Context, *core.Session) error
+	StoreSessionStub        func(context.Context, *rpc.Session) error
 	storeSessionMutex       sync.RWMutex
 	storeSessionArgsForCall []struct {
 		arg1 context.Context
-		arg2 *core.Session
+		arg2 *rpc.Session
 	}
 	storeSessionReturns struct {
 		result1 error
@@ -39,7 +39,7 @@ type FakeStorage struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeStorage) ListSessions(arg1 context.Context) ([]*core.Session, error) {
+func (fake *FakeStorage) ListSessions(arg1 context.Context) ([]*rpc.Session, error) {
 	fake.listSessionsMutex.Lock()
 	ret, specificReturn := fake.listSessionsReturnsOnCall[len(fake.listSessionsArgsForCall)]
 	fake.listSessionsArgsForCall = append(fake.listSessionsArgsForCall, struct {
@@ -64,7 +64,7 @@ func (fake *FakeStorage) ListSessionsCallCount() int {
 	return len(fake.listSessionsArgsForCall)
 }
 
-func (fake *FakeStorage) ListSessionsCalls(stub func(context.Context) ([]*core.Session, error)) {
+func (fake *FakeStorage) ListSessionsCalls(stub func(context.Context) ([]*rpc.Session, error)) {
 	fake.listSessionsMutex.Lock()
 	defer fake.listSessionsMutex.Unlock()
 	fake.ListSessionsStub = stub
@@ -77,38 +77,38 @@ func (fake *FakeStorage) ListSessionsArgsForCall(i int) context.Context {
 	return argsForCall.arg1
 }
 
-func (fake *FakeStorage) ListSessionsReturns(result1 []*core.Session, result2 error) {
+func (fake *FakeStorage) ListSessionsReturns(result1 []*rpc.Session, result2 error) {
 	fake.listSessionsMutex.Lock()
 	defer fake.listSessionsMutex.Unlock()
 	fake.ListSessionsStub = nil
 	fake.listSessionsReturns = struct {
-		result1 []*core.Session
+		result1 []*rpc.Session
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeStorage) ListSessionsReturnsOnCall(i int, result1 []*core.Session, result2 error) {
+func (fake *FakeStorage) ListSessionsReturnsOnCall(i int, result1 []*rpc.Session, result2 error) {
 	fake.listSessionsMutex.Lock()
 	defer fake.listSessionsMutex.Unlock()
 	fake.ListSessionsStub = nil
 	if fake.listSessionsReturnsOnCall == nil {
 		fake.listSessionsReturnsOnCall = make(map[int]struct {
-			result1 []*core.Session
+			result1 []*rpc.Session
 			result2 error
 		})
 	}
 	fake.listSessionsReturnsOnCall[i] = struct {
-		result1 []*core.Session
+		result1 []*rpc.Session
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeStorage) StoreSession(arg1 context.Context, arg2 *core.Session) error {
+func (fake *FakeStorage) StoreSession(arg1 context.Context, arg2 *rpc.Session) error {
 	fake.storeSessionMutex.Lock()
 	ret, specificReturn := fake.storeSessionReturnsOnCall[len(fake.storeSessionArgsForCall)]
 	fake.storeSessionArgsForCall = append(fake.storeSessionArgsForCall, struct {
 		arg1 context.Context
-		arg2 *core.Session
+		arg2 *rpc.Session
 	}{arg1, arg2})
 	stub := fake.StoreSessionStub
 	fakeReturns := fake.storeSessionReturns
@@ -129,13 +129,13 @@ func (fake *FakeStorage) StoreSessionCallCount() int {
 	return len(fake.storeSessionArgsForCall)
 }
 
-func (fake *FakeStorage) StoreSessionCalls(stub func(context.Context, *core.Session) error) {
+func (fake *FakeStorage) StoreSessionCalls(stub func(context.Context, *rpc.Session) error) {
 	fake.storeSessionMutex.Lock()
 	defer fake.storeSessionMutex.Unlock()
 	fake.StoreSessionStub = stub
 }
 
-func (fake *FakeStorage) StoreSessionArgsForCall(i int) (context.Context, *core.Session) {
+func (fake *FakeStorage) StoreSessionArgsForCall(i int) (context.Context, *rpc.Session) {
 	fake.storeSessionMutex.RLock()
 	defer fake.storeSessionMutex.RUnlock()
 	argsForCall := fake.storeSessionArgsForCall[i]

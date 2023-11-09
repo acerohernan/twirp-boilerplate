@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package twirp.v1;
+
+option go_package = "github.com/acerohernan/twirp-boilerplate/twirp";
+
+import "models.proto";
+
+service AuthService {
+    rpc CreateSession (CreateSessionRequest) returns (CreateSessionResponse) {}
+    rpc ListSessions (ListSessionsRequest) returns (ListSessionsResponse) {}
+}
+
+message CreateSessionRequest {
+    string email = 1;
+}
+
+message CreateSessionResponse {
+    rpc.Session session = 1;
+}
+
+message ListSessionsRequest {}
+
+message ListSessionsResponse {
+    repeated rpc.Session sessions = 1;
+}
