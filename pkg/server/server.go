@@ -96,7 +96,7 @@ func (s *Server) Start() error {
 
 	s.running.Store(true)
 
-	logger.Infow("server started successfully")
+	logger.Infow("server started successfully", "port", s.conf.Port)
 
 	<-s.doneChan
 
