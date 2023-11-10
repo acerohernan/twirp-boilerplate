@@ -7,4 +7,4 @@
 - [x] Mock interfaces generation
 - [x] Unit Testing
 - [x] Versioning
-- [ ] API load test
+- [x] API load test
