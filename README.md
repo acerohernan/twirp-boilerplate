@@ -10,5 +10,5 @@
 - [x] API load test
 - [x] Dockerfile
 - [x] Dockerfile for development with hot reload
-- [] Proto params validation
-- [] Open API integration
+- [ ] Proto params validation
+- [ ] Open API integration
