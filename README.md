@@ -8,6 +8,7 @@
 - [x] Unit Testing
 - [x] Versioning
 - [x] API load test
-- [] Dockerfile
+- [x] Dockerfile
+- [x] Dockerfile for development with hot reload
 - [] Proto params validation
 - [] Open API integration
