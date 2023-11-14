@@ -9,12 +9,12 @@ import (
 	"sync/atomic"
 	"time"
 
+	authv1 "github.com/acerohernan/twirp-boilerplate/core/auth/v1"
+	authv2 "github.com/acerohernan/twirp-boilerplate/core/auth/v2"
 	"github.com/acerohernan/twirp-boilerplate/pkg/config"
 	"github.com/acerohernan/twirp-boilerplate/pkg/config/logger"
 	servicev1 "github.com/acerohernan/twirp-boilerplate/pkg/service/v1"
 	servicev2 "github.com/acerohernan/twirp-boilerplate/pkg/service/v2"
-	twirpv1 "github.com/acerohernan/twirp-boilerplate/rpc/twirp/v1"
-	twirpv2 "github.com/acerohernan/twirp-boilerplate/rpc/twirp/v2"
 	"github.com/rs/cors"
 	"github.com/urfave/negroni/v3"
 )
@@ -39,8 +39,8 @@ func NewServer(conf *config.Config, authServiceV1 *servicev1.AuthService,
 		closedChan:    make(chan struct{}),
 	}
 
-	authServerV1 := twirpv1.NewAuthServiceServer(authServiceV1)
-	authServerV2 := twirpv2.NewAuthServiceServer(authServiceV2)
+	authServerV1 := authv1.NewAuthServiceServer(authServiceV1)
+	authServerV2 := authv2.NewAuthServiceServer(authServiceV2)
 
 	middleares := []negroni.Handler{
 		// always first

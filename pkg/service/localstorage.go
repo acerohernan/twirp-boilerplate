@@ -4,21 +4,21 @@ import (
 	"context"
 	"sync"
 
-	"github.com/acerohernan/twirp-boilerplate/rpc"
+	"github.com/acerohernan/twirp-boilerplate/core"
 )
 
 type LocalStorage struct {
-	sessions map[string]*rpc.Session
+	sessions map[string]*core.Session
 	mu       sync.RWMutex
 }
 
 func NewLocalStorage() *LocalStorage {
 	return &LocalStorage{
-		sessions: make(map[string]*rpc.Session),
+		sessions: make(map[string]*core.Session),
 	}
 }
 
-func (s *LocalStorage) StoreSession(_ context.Context, session *rpc.Session) error {
+func (s *LocalStorage) StoreSession(_ context.Context, session *core.Session) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -27,11 +27,11 @@ func (s *LocalStorage) StoreSession(_ context.Context, session *rpc.Session) err
 	return nil
 }
 
-func (s *LocalStorage) ListSessions(ctx context.Context) ([]*rpc.Session, error) {
+func (s *LocalStorage) ListSessions(ctx context.Context) ([]*core.Session, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
-	sessions := make([]*rpc.Session, 0)
+	sessions := make([]*core.Session, 0)
 
 	for _, s := range s.sessions {
 		sessions = append(sessions, s)

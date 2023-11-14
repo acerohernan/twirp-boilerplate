@@ -4,10 +4,10 @@ import (
 	"context"
 	"net/mail"
 
+	"github.com/acerohernan/twirp-boilerplate/core"
+	authv1 "github.com/acerohernan/twirp-boilerplate/core/auth/v1"
 	"github.com/acerohernan/twirp-boilerplate/pkg/service"
 	"github.com/acerohernan/twirp-boilerplate/pkg/utils"
-	"github.com/acerohernan/twirp-boilerplate/rpc"
-	"github.com/acerohernan/twirp-boilerplate/rpc/twirp/v1"
 )
 
 type AuthService struct {
@@ -20,7 +20,7 @@ func NewAuthService(storage service.Storage) *AuthService {
 	}
 }
 
-func (s *AuthService) CreateSession(ctx context.Context, req *twirp.CreateSessionRequest) (*twirp.CreateSessionResponse, error) {
+func (s *AuthService) CreateSession(ctx context.Context, req *authv1.CreateSessionRequest) (*authv1.CreateSessionResponse, error) {
 	if req.Email == "" {
 		return nil, service.ErrBadRequest
 	}
@@ -29,7 +29,7 @@ func (s *AuthService) CreateSession(ctx context.Context, req *twirp.CreateSessio
 		return nil, service.ErrBadRequest
 	}
 
-	sess := &rpc.Session{
+	sess := &core.Session{
 		Id: utils.NewGuid(utils.SessionPrefix),
 	}
 
@@ -39,19 +39,19 @@ func (s *AuthService) CreateSession(ctx context.Context, req *twirp.CreateSessio
 		return nil, err
 	}
 
-	return &twirp.CreateSessionResponse{
+	return &authv1.CreateSessionResponse{
 		Session: sess,
 	}, nil
 }
 
-func (s *AuthService) ListSessions(ctx context.Context, req *twirp.ListSessionsRequest) (*twirp.ListSessionsResponse, error) {
+func (s *AuthService) ListSessions(ctx context.Context, req *authv1.ListSessionsRequest) (*authv1.ListSessionsResponse, error) {
 	sess, err := s.storage.ListSessions(ctx)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return &twirp.ListSessionsResponse{
+	return &authv1.ListSessionsResponse{
 		Sessions: sess,
 	}, nil
 }

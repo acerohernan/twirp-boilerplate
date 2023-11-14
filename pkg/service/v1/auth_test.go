@@ -4,16 +4,16 @@ import (
 	"context"
 	"testing"
 
+	authv1 "github.com/acerohernan/twirp-boilerplate/core/auth/v1"
 	"github.com/acerohernan/twirp-boilerplate/pkg/service/servicefakes"
 	servicev1 "github.com/acerohernan/twirp-boilerplate/pkg/service/v1"
-	"github.com/acerohernan/twirp-boilerplate/rpc/twirp/v1"
 	"github.com/stretchr/testify/require"
 )
 
 func TestCreateSession(t *testing.T) {
 	t.Run("should throw an error if the email is invalid", func(t *testing.T) {
 		svc := newTestAuthService()
-		req := &twirp.CreateSessionRequest{
+		req := &authv1.CreateSessionRequest{
 			Email: "invalid_email",
 		}
 		res, err := svc.CreateSession(context.Background(), req)

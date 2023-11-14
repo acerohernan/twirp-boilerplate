@@ -10,5 +10,6 @@
 - [x] API load test
 - [x] Dockerfile
 - [x] Dockerfile for development with hot reload
+- [x] Buf tool integration
 - [ ] Proto params validation
 - [ ] Open API integration
