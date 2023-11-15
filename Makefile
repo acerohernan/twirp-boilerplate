@@ -12,3 +12,6 @@ wire:
 
 protoc:
 	buf generate proto
+
+test:
+	go test -v ./...

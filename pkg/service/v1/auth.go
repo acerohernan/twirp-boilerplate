@@ -2,38 +2,39 @@ package servicev1
 
 import (
 	"context"
-	"net/mail"
 
 	"github.com/acerohernan/twirp-boilerplate/core"
 	authv1 "github.com/acerohernan/twirp-boilerplate/core/auth/v1"
+	"github.com/acerohernan/twirp-boilerplate/pkg/config/logger"
 	"github.com/acerohernan/twirp-boilerplate/pkg/service"
 	"github.com/acerohernan/twirp-boilerplate/pkg/utils"
 )
 
 type AuthService struct {
 	storage service.Storage
+	val     *utils.ProtoValidator
 }
 
-func NewAuthService(storage service.Storage) *AuthService {
+func NewAuthService(storage service.Storage, val *utils.ProtoValidator) *AuthService {
 	return &AuthService{
 		storage: storage,
+		val:     val,
 	}
 }
 
 func (s *AuthService) CreateSession(ctx context.Context, req *authv1.CreateSessionRequest) (*authv1.CreateSessionResponse, error) {
-	if req.Email == "" {
-		return nil, service.ErrBadRequest
-	}
+	err := s.val.Validate(req)
 
-	if _, err := mail.ParseAddress(req.Email); err != nil {
-		return nil, service.ErrBadRequest
+	if err != nil {
+		logger.Errorw("proto validation error", err)
+		return nil, err
 	}
 
 	sess := &core.Session{
 		Id: utils.NewGuid(utils.SessionPrefix),
 	}
 
-	err := s.storage.StoreSession(ctx, sess)
+	err = s.storage.StoreSession(ctx, sess)
 
 	if err != nil {
 		return nil, err

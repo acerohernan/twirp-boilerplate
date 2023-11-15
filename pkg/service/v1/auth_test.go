@@ -7,6 +7,7 @@ import (
 	authv1 "github.com/acerohernan/twirp-boilerplate/core/auth/v1"
 	"github.com/acerohernan/twirp-boilerplate/pkg/service/servicefakes"
 	servicev1 "github.com/acerohernan/twirp-boilerplate/pkg/service/v1"
+	"github.com/acerohernan/twirp-boilerplate/pkg/utils"
 	"github.com/stretchr/testify/require"
 )
 
@@ -25,7 +26,8 @@ func TestCreateSession(t *testing.T) {
 
 func newTestAuthService() *TestAuthService {
 	storage := &servicefakes.FakeStorage{}
-	svc := servicev1.NewAuthService(storage)
+	val, _ := utils.NewProtoValidator()
+	svc := servicev1.NewAuthService(storage, val)
 	return &TestAuthService{
 		AuthService: *svc,
 		storage:     storage,
